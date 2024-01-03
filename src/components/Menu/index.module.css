@@ -13,6 +13,30 @@
     flex
     justify-between
 
-    rounded-md
-}
+    rounded-md;
 
+  transform: translateX(-50%);
+  border: 1px solid theme(colors.border1);
+  box-shadow: theme(colors.shadow1);
+  background-color: theme(colors.background1);
+
+  .iconWrapper {
+    @apply 
+      flex
+      justify-center
+      items-center
+
+      h-10
+      w-10
+
+      cursor-pointer
+      rounded-md;
+    &:hover, &.active {
+        background-color: theme('colors.text2');
+    }
+    .icon {
+      color: theme(colors.text1);
+      font-size: 20px;
+    }
+  }
+}
