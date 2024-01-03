@@ -1,0 +1,18 @@
+.menuContainer {
+  @apply 
+    absolute
+
+    w-1/4
+
+    left-1/2
+    top-10
+
+    px-5
+    py-1
+
+    flex
+    justify-between
+
+    rounded-md
+}
+
