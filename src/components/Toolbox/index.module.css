@@ -1,0 +1,42 @@
+.toolboxContainer {
+  @apply
+    absolute
+    rounded-md
+    w-64
+    p-5
+    top-1/4
+    left-5;
+  box-shadow: theme(colors.shadow1);
+  border: 1px solid theme(colors.border1);
+  background-color: theme(colors.background1);
+
+  .toolItem {
+    /* @apply mb-5; */
+    .toolHeading { 
+      font-size: 11px;
+      color: theme(colors.text1);
+    }
+
+    .itemContainer {
+      @apply
+        flex
+        justify-between
+        mt-2;
+      .colorBox {
+        @apply
+        h-5
+        w-5 
+        /* mr-1  */
+        rounded-sm 
+        cursor-pointer;
+        &:hover, &.active {
+          border: inset 2px solid theme(colors.border2);
+          box-shadow: inset theme(colors.shadow2);
+        }
+      }
+      > input {
+        width: 100%;
+      }
+    }
+  }
+}
