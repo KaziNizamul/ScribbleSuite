@@ -16,7 +16,10 @@ import { changeColor, updateBrushSize } from '@/core/slices/Toolbox.slice';
 const ToolBox = () => {
   const dispatch = useDispatch();
   const activeMenuItem = useSelector(state => state.menu.activeMenuItem);
-  const { color: selectedColor } = useSelector((state) => state.toolbox[activeMenuItem])
+  const {
+    color: selectedColor,
+    size,
+  } = useSelector((state) => state.toolbox[activeMenuItem])
   
   const showToolbox = activeMenuItem === MENU_ITEM_ICON.PENCIL;
   const showBrush = ACTIONABLE_MENU_ITEM.includes(activeMenuItem);
@@ -81,8 +84,12 @@ const ToolBox = () => {
             <input
               type="range"
               min={1}
-              max={10}
+              max={activeMenuItem === MENU_ITEM_ICON.ERASOR 
+                ? 100
+                : 10
+              }
               step={1}
+              value={size}
               onChange={onUpdateBrushSize}
             />
           </div>
