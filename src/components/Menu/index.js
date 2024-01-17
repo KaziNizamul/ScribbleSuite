@@ -7,7 +7,7 @@ import { EMPTY_ARRAY, EMPTY_STRING } from '@/shared/GlobalConstant';
 import { ACTIONABLE_MENU_ITEM, MENU_ITEMS } from './constant/Menu.constant';
 /* state */
 import { useDispatch, useSelector } from 'react-redux';
-import { menuItemClick, actionableMenuItem } from '@/core/slices/Menu.slice';
+import { menuItemClick, actionableMenuItemClick } from '@/core/slices/Menu.slice';
 
 const Menu = () => {
   const dispatch = useDispatch();
@@ -17,8 +17,8 @@ const Menu = () => {
     dispatch(menuItemClick(item));
   }
 
-  const handleActionableMenuClick = () => {
-
+  const handleActionableMenuClick = (item) => {
+    dispatch(actionableMenuItemClick(item));
   }
 
   return (

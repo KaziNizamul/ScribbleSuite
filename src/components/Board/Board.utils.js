@@ -59,6 +59,35 @@ class BoardUtils {
     context.lineTo(x, y);
     context.stroke();
   }
+
+  static downloadCanvas = (canvasRef) => {
+    /*
+      # step 1: make url from canvas.toDataURL
+      # step 2: create a anchor element
+
+      # step 3:
+      now anchor is created,
+      and i need it to download the canvas, on its click
+      that means, i need to attach href, with value url for this href
+
+      # step 4:
+      on download, i need to give it some name,
+
+      # step 5:
+      click it
+    */
+    const { canvas } = BoardUtils.getCanvasAndContext(canvasRef);
+    // #1
+    const URL = canvas.toDataURL();
+    // #2
+    const anchor = document.createElement('a');
+    // #3
+    anchor.href = URL;
+    // #4
+    anchor.download = 'sketch.png'; // naming filename
+    // #5
+    anchor.click();
+  }
 }
 
 export default BoardUtils;
