@@ -76,7 +76,6 @@ const Board = () => {
   };
 
   const handleBeginDraw = (path) => {
-    console.log({ path });
     BoardUtils.beginDrawing({
       canvasRef,
       x: path.x,
@@ -85,7 +84,6 @@ const Board = () => {
   };
 
   const handleEndDraw = (path) => {
-    console.log({ path });
     BoardUtils.endDrawing({
       canvasRef,
       x: path.x,
@@ -103,7 +101,6 @@ const Board = () => {
     };
 
     const handleChangeConfig = (config) => {
-      console.log("config", config);
       changeConfig(config.color, config.size);
     };
 
