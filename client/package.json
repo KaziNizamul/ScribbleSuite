@@ -1,5 +1,5 @@
 {
-  "name": "ScribbleSuite",
+  "name": "scribble-suite",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -18,7 +18,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-redux": "^9.0.4",
-    "socket.io-client": "^4.7.2"
+    "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",

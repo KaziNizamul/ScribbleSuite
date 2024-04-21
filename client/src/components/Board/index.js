@@ -1,6 +1,9 @@
-import { useEffect, useLayoutEffect, useRef } from 'react';
+'use client';
+import { useEffect, useRef } from 'react';
+import useLayoutEffect from '@/shared/useIsomorphicLayoutHook';
 /* external imports */
 import { useDispatch, useSelector } from 'react-redux';
+import { socket } from '@/shared/socket';
 /* utility */
 import BoardUtils from './Board.utils';
 /* constants */
@@ -84,6 +87,9 @@ const Board = () => {
 
   useLayoutEffect(() => {
     BoardUtils.setupCanvas(canvasRef);
+    socket.on("connect", () => {
+      console.log('socket client connected.')
+    })
 
     const { canvas } = BoardUtils.getCanvasAndContext(canvasRef);
     if (!canvas) {
