@@ -11,7 +11,7 @@ class BoardUtils {
 
   static getCanvasAndContext = (canvasRef) => {
     const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d', { willReadFrequently: true });
     return {
       canvas,
       context,
@@ -87,6 +87,12 @@ class BoardUtils {
     anchor.download = 'sketch.png'; // naming filename
     // #5
     anchor.click();
+  }
+
+  static retrieveAndDisplayImg = (canvasRef, drawingHistory, historyPtr) => {
+    const { context } = BoardUtils.getCanvasAndContext(canvasRef);
+    const retrievedImg = drawingHistory.current[historyPtr.current];
+    context.putImageData(retrievedImg, 0, 0);
   }
 }
 

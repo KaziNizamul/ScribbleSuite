@@ -10,6 +10,8 @@ import { actionableMenuItemClick } from '@/core/slices/Menu.slice';
 const Board = () => {
   const canvasRef = useRef(null);
   const shouldDrawRef = useRef(null);
+  const drawingHistory = useRef([]);
+  const historyPtr = useRef(0);
 
   const dispatch = useDispatch();
 
@@ -18,6 +20,7 @@ const Board = () => {
     color: selectedColor,
     size
   } = useSelector((state) => state.toolbox[activeMenuItem]);
+
   /*
     @hint: 
       1. beginPath
@@ -25,6 +28,7 @@ const Board = () => {
       3. lineTo
       4. stroke
   */
+
   const onMouseDown = (evt) => {
     const { canvas } = BoardUtils.getCanvasAndContext(canvasRef);
     if (!canvas) {
@@ -40,13 +44,11 @@ const Board = () => {
   };
 
   const onMouseMove = (evt) => {
-    const { canvas, context } = BoardUtils.getCanvasAndContext(canvasRef);
+    const { canvas } = BoardUtils.getCanvasAndContext(canvasRef);
     if (!canvas || !shouldDrawRef.current) {
       return;
     }
 
-    context.lineTo(evt.clientX, evt.clientY);
-    context.stroke();
     BoardUtils.endDrawing({
       canvasRef,
       x: evt.clientX,
@@ -56,6 +58,16 @@ const Board = () => {
 
   const onMouseUp = () => {
     shouldDrawRef.current = false;
+    /* 
+      @hint:
+        get the image snapshot
+        save it in history
+        update ptr to current img
+    */
+    const { canvas, context } = BoardUtils.getCanvasAndContext(canvasRef);
+    const imgSnapshot = context.getImageData(0, 0, canvas.width, canvas.height);
+    drawingHistory.current.push(imgSnapshot);
+    historyPtr.current = drawingHistory.current.length - 1;
   };
 
   /* UPDATE CANVAS WITH NEW COLOR OR BRUSH SIZE */
@@ -106,14 +118,31 @@ const Board = () => {
     switch(actionableMenuItem) {
       case MENU_ITEM_ICON.DOWNLOAD: {
         BoardUtils.downloadCanvas(canvasRef);
+        break;
       }
       case MENU_ITEM_ICON.UNDO: {
-        
+        /* 
+          @hint:
+            come one step back
+            get the img from here in history
+            put this to display
+        */
+        if (historyPtr.current > 0) {
+          historyPtr.current = historyPtr.current - 1;
+        }
+        BoardUtils.retrieveAndDisplayImg(canvasRef, drawingHistory, historyPtr);
+        break;
       }
       case MENU_ITEM_ICON.REDO: {
-
+        if (historyPtr.current < drawingHistory.current.length - 1) {
+          historyPtr.current = historyPtr.current + 1;
+        }
+        BoardUtils.retrieveAndDisplayImg(canvasRef, drawingHistory, historyPtr);
+        break;
       }
-      default: break;
+      default: {
+        break;
+      }
     }
     dispatch(actionableMenuItemClick(null));
   }, [actionableMenuItem, dispatch]);

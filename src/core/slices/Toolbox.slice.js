@@ -11,7 +11,7 @@ const initialState = {
   },
   [MENU_ITEM_ICON.ERASOR]: {
     color: 'white',
-    size: 3,
+    size: 10,
   },
   [MENU_ITEM_ICON.UNDO]: {},
   [MENU_ITEM_ICON.REDO]: {},
