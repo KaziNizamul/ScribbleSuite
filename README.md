@@ -16,10 +16,12 @@ Scribble Suite is an innovative, real-time collaborative drawing application tha
 	<code><img width="50" src="https://user-images.githubusercontent.com/25181517/187070862-03888f18-2e63-4332-95fb-3ba4f2708e59.png" alt="websocket" title="WebSocket (Socket.io)"/></code>
 </div>
 
+<br>
+
 ## Deployed Link: 
 [https://scribble-suite-frontend.vercel.app/](https://scribble-suite-frontend.vercel.app/)
 
-
+<br>
 
 https://github.com/KaziNizamul/ScribbleSuite/assets/19683035/af254fed-e6f1-4ec7-a383-f766546902c7
 
