@@ -19,6 +19,12 @@ Scribble Suite is an innovative, real-time collaborative drawing application tha
 ## Deployed Link: 
 [https://scribble-suite-frontend.vercel.app/](https://scribble-suite-frontend.vercel.app/)
 
+
+
+https://github.com/KaziNizamul/ScribbleSuite/assets/19683035/af254fed-e6f1-4ec7-a383-f766546902c7
+
+
+
 ## Features
 
 - **Real-Time Collaboration:** Utilize Socket.io for real-time drawing and updates across all connected clients.
