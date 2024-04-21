@@ -1,14 +1,14 @@
-'use client';
-import { useEffect, useRef } from 'react';
-import useLayoutEffect from '@/shared/useIsomorphicLayoutHook';
+"use client";
+import { useEffect, useRef } from "react";
+import useLayoutEffect from "@/shared/useIsomorphicLayoutHook";
 /* external imports */
-import { useDispatch, useSelector } from 'react-redux';
-import { socket } from '@/shared/socket';
+import { useDispatch, useSelector } from "react-redux";
+import { socket } from "@/shared/socket";
 /* utility */
-import BoardUtils from './Board.utils';
+import BoardUtils from "./Board.utils";
 /* constants */
-import { MENU_ITEM_ICON } from '../Menu/constant/Menu.constant';
-import { actionableMenuItemClick } from '@/core/slices/Menu.slice';
+import { MENU_ITEM_ICON } from "../Menu/constant/Menu.constant";
+import { actionableMenuItemClick } from "@/core/slices/Menu.slice";
 
 const Board = () => {
   const canvasRef = useRef(null);
@@ -21,7 +21,7 @@ const Board = () => {
   const { activeMenuItem, actionableMenuItem } = useSelector((state) => state.menu);
   const {
     color: selectedColor,
-    size
+    size,
   } = useSelector((state) => state.toolbox[activeMenuItem]);
 
   /*
@@ -43,7 +43,8 @@ const Board = () => {
       canvasRef,
       x: evt.clientX,
       y: evt.clientY,
-    })
+    });
+    socket.emit("beginDraw", { x: evt.clientX, y: evt.clientY });
   };
 
   const onMouseMove = (evt) => {
@@ -56,7 +57,8 @@ const Board = () => {
       canvasRef,
       x: evt.clientX,
       y: evt.clientY,
-    })
+    });
+    socket.emit("endDraw", { x: evt.clientX, y: evt.clientY });
   };
 
   const onMouseUp = () => {
@@ -73,23 +75,48 @@ const Board = () => {
     historyPtr.current = drawingHistory.current.length - 1;
   };
 
+  const handleBeginDraw = (path) => {
+    console.log({ path });
+    BoardUtils.beginDrawing({
+      canvasRef,
+      x: path.x,
+      y: path.y,
+    });
+  };
+
+  const handleEndDraw = (path) => {
+    console.log({ path });
+    BoardUtils.endDrawing({
+      canvasRef,
+      x: path.x,
+      y: path.y,
+    });
+  };
+
   /* UPDATE CANVAS WITH NEW COLOR OR BRUSH SIZE */
   useEffect(() => {
     const { context } = BoardUtils.getCanvasAndContext(canvasRef);
 
-    const changeConfig = () => {
-      context.strokeStyle = selectedColor;
+    const changeConfig = (color, size) => {
+      context.strokeStyle = color;
       context.lineWidth = size;
-    }
+    };
 
-    changeConfig();
+    const handleChangeConfig = (config) => {
+      console.log("config", config);
+      changeConfig(config.color, config.size);
+    };
+
+    changeConfig(selectedColor, size);
+
+    socket.on('changeConfig', handleChangeConfig)
+    return () => {
+      socket.off('changeConfig', handleChangeConfig)
+    }
   }, [selectedColor, size]);
 
   useLayoutEffect(() => {
     BoardUtils.setupCanvas(canvasRef);
-    socket.on("connect", () => {
-      console.log('socket client connected.')
-    })
 
     const { canvas } = BoardUtils.getCanvasAndContext(canvasRef);
     if (!canvas) {
@@ -100,8 +127,15 @@ const Board = () => {
       canvas,
       onMouseDown,
       onMouseMove,
-      onMouseUp
+      onMouseUp,
     });
+
+    socket.on("connect", () => {
+      console.log("socket client connected.");
+    });
+
+    socket.on("beginDraw", handleBeginDraw);
+    socket.on("endDraw", handleEndDraw);
 
     return () => {
       BoardUtils.removeEventListeners({
@@ -109,19 +143,21 @@ const Board = () => {
         onMouseDown,
         onMouseMove,
         onMouseUp,
-      })
+      });
+      socket.off("beginDraw", handleBeginDraw);
+      socket.off("endDraw", handleEndDraw);
     };
   }, []);
 
   /* actionable useEffect */
   useEffect(() => {
     const { canvas } = BoardUtils.getCanvasAndContext(canvasRef);
-    
+
     if (!canvas) {
       return;
     }
 
-    switch(actionableMenuItem) {
+    switch (actionableMenuItem) {
       case MENU_ITEM_ICON.DOWNLOAD: {
         BoardUtils.downloadCanvas(canvasRef);
         break;
@@ -153,12 +189,7 @@ const Board = () => {
     dispatch(actionableMenuItemClick(null));
   }, [actionableMenuItem, dispatch]);
 
-  return (
-    <canvas
-      ref={canvasRef}
-    >
-    </canvas>
-  )
-}
+  return <canvas ref={canvasRef}></canvas>;
+};
 
 export default Board;

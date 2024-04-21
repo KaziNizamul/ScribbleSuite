@@ -1,20 +1,30 @@
 const express = require('express');
-const cors = require('cors');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
+const cors = require('cors');
 
-const PORT = 8080;
 const app = express();
 app.use(cors({ origin: process.env.CLIENT_URL }));
-const server = createServer(app);                                   // convert: express server --> http server
-const io = new Server(server, { cors: process.env.CLIENT_URL });    // convert: http server    --> socket server
+const httpServer = createServer(app);                                   // convert: express server --> http server
+const io = new Server(httpServer, { cors: process.env.CLIENT_URL });    // convert: http server    --> socket server
+
 
 // listens to socket events
-io.on('connection', () => {
-  console.log('socket server connected.');
+io.on('connection', (socket) => {
+  console.log('socket server connected.')
+
+  socket.on('beginDraw', (args) => {
+    socket.broadcast.emit('beginDraw', args)
+  })
+
+  socket.on('endDraw', (args) => {
+    socket.broadcast.emit('endDraw', args);
+  })
+
+  socket.on('changeConfig', (arg) => {
+    socket.broadcast.emit('changeConfig', arg)
+  })
 });
 
 // run: http server
-server.listen(PORT, () => {
-  console.log('server running at http://localhost:8080');
-});
+httpServer.listen(8080);

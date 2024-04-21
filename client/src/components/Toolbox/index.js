@@ -12,6 +12,8 @@ import { EMPTY_ARRAY, EMPTY_STRING } from '@/shared/GlobalConstant';
 /* state */
 import { useDispatch, useSelector } from 'react-redux';
 import { changeColor, updateBrushSize } from '@/core/slices/Toolbox.slice';
+/* internal components */
+import { socket } from "@/shared/socket";
 
 const ToolBox = () => {
   const dispatch = useDispatch();
@@ -29,6 +31,10 @@ const ToolBox = () => {
       item: activeMenuItem,
       color
     }));
+    socket.emit('changeConfig', {
+      color,
+      size,
+    })
   }
 
   const onUpdateBrushSize = (evt) => {
@@ -36,6 +42,10 @@ const ToolBox = () => {
       item: activeMenuItem,
       size: evt.target.value
     }));
+    socket.emit('changeConfig', { 
+      color: selectedColor,
+      size: evt.target.value,
+    })
   };
 
   return (

@@ -1,2 +1,3 @@
 import { io } from "socket.io-client";
-export const socket = io(process.env.SOCKET_URL);
+const URL = process.env.NEXT_SOCKET_SERVER_URL;
+export const socket = io(URL)
